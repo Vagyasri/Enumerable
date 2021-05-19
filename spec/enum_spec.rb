@@ -95,7 +95,7 @@ describe Enumerable do
       context 'when self is a range' do
         it 'yields selected items within that range' do
           arr = []
-          array[3..-1].my_select { |friend| arr.push(friend) if friend != 'Brian'}
+          array[3..-1].my_select { |friend| arr.push(friend) if friend != 'Brian' }
           expect(arr).to eq(['Arun'])
         end
       end
