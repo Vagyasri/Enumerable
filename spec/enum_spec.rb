@@ -1,8 +1,12 @@
+# rubocop:disable Lint/Void
+
 require './enumerables'
 
 describe Enumerable do
   array = %w[Sharon Leo Leila Brian Arun]
   num_array = [10, 20, 30, 5, 7, 9, 3]
+  hash = { min: 2, max: 5 }
+
   describe '#my_each' do
     context 'if block not given' do
       it 'returns enum' do
@@ -11,9 +15,26 @@ describe Enumerable do
     end
 
     context 'if block given' do
-      it 'yields item' do
-        arr = array.my_each { |friend| friend }
-        expect(arr).to eq(%w[Sharon Leo Leila Brian Arun])
+      context 'if an array is given' do
+        it 'yields item' do
+          arr = array.my_each { |friend| friend }
+          expect(arr).to eq(%w[Sharon Leo Leila Brian Arun])
+        end
+
+        context 'if a hash is given' do
+          it 'yields item' do
+            result = []
+            hash.my_each { |key, value| result.push("k: #{key}, v: #{value}") }
+            expect(result).to eq(["k: min, v: 2", "k: max, v: 5"])
+          end
+        end
+
+        context 'if a range of an array is given' do
+          it 'yields items in that range' do
+            arr = array[3..-1].my_each { |item| item }
+            expect(arr).to eq(%w[Brian Arun])
+          end
+        end
       end
     end
   end
@@ -26,11 +47,27 @@ describe Enumerable do
     end
 
     context 'if block given' do
-      it 'yields item with index' do
-        arr = []
-        array.my_each_with_index { |friend, index| arr.push("#{index}: #{friend}") if index.odd? }
-        expect(arr).to eq(['1: Leo', '3: Brian'])
+      context 'if an array is given' do
+        it 'yields item' do
+          arr = []
+          array.my_each_with_index { |item, index| arr.push(index) }
+          expect(arr).to eq([0, 1, 2, 3, 4])
+        end
+      end  
+      context 'if a hash is given' do
+        it 'yields item with index' do
+          arr = []
+          array.my_each_with_index { |friend, index| arr.push("#{index}: #{friend}") if index.odd? }
+          expect(arr).to eq(['1: Leo', '3: Brian'])
+        end
       end
+      context 'if a range of an array is given' do
+        it 'yields items in that range' do
+          arr = []
+          array[3..-1].my_each_with_index { |item, index| arr.push("#{index}: #{item}") }
+          expect(arr).to eq(["0: Brian", "1: Arun"])
+        end
+      end  
     end
   end
 
@@ -142,3 +179,5 @@ describe Enumerable do
     end
   end
 end
+
+# rubocop:enable Lint/Void
