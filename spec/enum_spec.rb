@@ -1,5 +1,3 @@
-# rubocop:disable Lint/Void
-
 require './enumerables'
 
 describe Enumerable do
@@ -25,7 +23,7 @@ describe Enumerable do
           it 'yields item' do
             result = []
             hash.my_each { |key, value| result.push("k: #{key}, v: #{value}") }
-            expect(result).to eq(["k: min, v: 2", "k: max, v: 5"])
+            expect(result).to eq(['k: min, v: 2', 'k: max, v: 5'])
           end
         end
 
@@ -50,10 +48,10 @@ describe Enumerable do
       context 'if an array is given' do
         it 'yields item' do
           arr = []
-          array.my_each_with_index { |item, index| arr.push(index) }
+          array.my_each_with_index { |_item, index| arr.push(index) }
           expect(arr).to eq([0, 1, 2, 3, 4])
         end
-      end  
+      end
       context 'if a hash is given' do
         it 'yields item with index' do
           arr = []
@@ -65,9 +63,9 @@ describe Enumerable do
         it 'yields items in that range' do
           arr = []
           array[3..-1].my_each_with_index { |item, index| arr.push("#{index}: #{item}") }
-          expect(arr).to eq(["0: Brian", "1: Arun"])
+          expect(arr).to eq(['0: Brian', '1: Arun'])
         end
-      end  
+      end
     end
   end
 
@@ -179,5 +177,3 @@ describe Enumerable do
     end
   end
 end
-
-# rubocop:enable Lint/Void
