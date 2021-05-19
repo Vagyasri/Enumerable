@@ -13,13 +13,13 @@ describe Enumerable do
     end
 
     context 'if block given' do
-      context 'if an array is given' do
+      context 'when self is an array' do
         it 'yields item' do
           arr = array.my_each { |friend| friend }
           expect(arr).to eq(%w[Sharon Leo Leila Brian Arun])
         end
 
-        context 'if a hash is given' do
+        context 'when self is a hash' do
           it 'yields item' do
             result = []
             hash.my_each { |key, value| result.push("k: #{key}, v: #{value}") }
@@ -27,7 +27,7 @@ describe Enumerable do
           end
         end
 
-        context 'if a range of an array is given' do
+        context 'when self is a range' do
           it 'yields items in that range' do
             arr = array[3..-1].my_each { |item| item }
             expect(arr).to eq(%w[Brian Arun])
@@ -45,21 +45,21 @@ describe Enumerable do
     end
 
     context 'if block given' do
-      context 'if an array is given' do
+      context 'when self is an array' do
         it 'yields item' do
           arr = []
           array.my_each_with_index { |_item, index| arr.push(index) }
           expect(arr).to eq([0, 1, 2, 3, 4])
         end
       end
-      context 'if a hash is given' do
+      context 'when self is a hash' do
         it 'yields item with index' do
           arr = []
           array.my_each_with_index { |friend, index| arr.push("#{index}: #{friend}") if index.odd? }
           expect(arr).to eq(['1: Leo', '3: Brian'])
         end
       end
-      context 'if a range of an array is given' do
+      context 'when self is a range' do
         it 'yields items in that range' do
           arr = []
           array[3..-1].my_each_with_index { |item, index| arr.push("#{index}: #{item}") }
@@ -77,9 +77,25 @@ describe Enumerable do
     end
 
     context 'if block given' do
-      it 'yields selected items' do
-        arr = array.my_select { |friend| friend != 'Brian' }
-        expect(arr).to eq(%w[Sharon Leo Leila Arun])
+      context 'when self is an array' do
+        it 'yields selected items' do
+          arr = array.my_select { |friend| friend != 'Brian' }
+          expect(arr).to eq(%w[Sharon Leo Leila Arun])
+        end
+      end
+
+      context 'when self is a hash' do
+        it 'yields item with index' do
+          result = []
+          hash.my_select { |k, v| result.push(k, v) if v > 4 }
+          expect(result).to eq([:max, 5])
+        end
+      end
+
+      context 'when self is a range' do
+        it 'yields items in that range' do
+          
+        end
       end
     end
   end
