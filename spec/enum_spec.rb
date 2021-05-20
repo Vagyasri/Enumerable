@@ -119,7 +119,7 @@ describe Enumerable do
         it "returns false if all the items doesn't satisfy a given condition" do
           expect(%w[Sharon Leo Leila Brian Arun].my_all?(/a/)).to be(false)
         end
-      end  
+      end
     end
   end
 
@@ -212,8 +212,8 @@ describe Enumerable do
       end
       context 'for a array of strings without arg' do
         it 'returns items those passes our filter' do
-          longest = array.my_inject { |memo,word| memo.size > word.size ? memo : word }
-          expect(longest).to eq("Sharon")
+          longest = array.my_inject { |memo, word| memo.size > word.size ? memo : word }
+          expect(longest).to eq('Sharon')
         end
       end
     end
@@ -227,7 +227,7 @@ describe Enumerable do
       context 'multiplication symbol given' do
         it 'returns multiplication of items' do
           num = num_array.my_inject(:*)
-          expect(num).to eq(5670000)
+          expect(num).to eq(5_670_000)
         end
       end
     end
