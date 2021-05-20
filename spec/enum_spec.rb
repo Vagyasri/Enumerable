@@ -46,7 +46,7 @@ describe Enumerable do
 
     context 'if block given' do
       context 'when self is an array' do
-        it 'yields item' do
+        it 'yields index' do
           arr = []
           array.my_each_with_index { |_item, index| arr.push(index) }
           expect(arr).to eq([0, 1, 2, 3, 4])
@@ -79,7 +79,8 @@ describe Enumerable do
     context 'if block given' do
       context 'when self is an array' do
         it 'yields selected items' do
-          arr = array.my_select { |friend| friend != 'Brian' }
+          arr = []
+          array.my_select { |friend| arr.push(friend) if friend != 'Brian' }
           expect(arr).to eq(%w[Sharon Leo Leila Arun])
         end
       end
@@ -109,9 +110,16 @@ describe Enumerable do
       end
     end
     context 'if block not given' do
-      it "returns false if all the items doesn't satisfy a given condition" do
-        expect(%w[Sharon Leo Leila Brian Arun].my_all?(/a/)).to be(false)
+      context 'if the argument is a class' do
+        it "returns false if all the items doesn't satisfy a given condition" do
+          expect(%w[Sharon Leo Leila Brian Arun].my_all?(Float)).to be(false)
+        end
       end
+      context 'if the argument is a Regex' do
+        it "returns false if all the items doesn't satisfy a given condition" do
+          expect(%w[Sharon Leo Leila Brian Arun].my_all?(/a/)).to be(false)
+        end
+      end  
     end
   end
 
@@ -122,8 +130,15 @@ describe Enumerable do
       end
     end
     context 'if block not given' do
-      it 'returns false if any of the item satisfies a given condition' do
-        expect(%w[Sharon Leo Leila Brian Arun].my_any?(/a/)).to be(true)
+      context 'if the argument is a Regex' do
+        it 'returns true if any of the item satisfies a given condition' do
+          expect(%w[Sharon Leo Leila Brian Arun].my_any?(/a/)).to be(true)
+        end
+      end
+      context 'if the argument is a class' do
+        it 'returns true if any of the item satisfies a given condition' do
+          expect(%w[Sharon Leo Leila Brian Arun].my_any?(String)).to be(true)
+        end
       end
     end
   end
@@ -135,8 +150,15 @@ describe Enumerable do
       end
     end
     context 'if block not given' do
-      it 'returns true if none of the items satisfy a given condition' do
-        expect(%w[Sharon Leo Leila Brian Arun].my_none?(/c/)).to be(true)
+      context 'if the argument is a Regex' do
+        it 'returns true if none of the items satisfy a given condition' do
+          expect(%w[Sharon Leo Leila Brian Arun].my_none?(/c/)).to be(true)
+        end
+      end
+      context 'if the argument is a Class' do
+        it 'returns true if none of the items satisfy a given condition' do
+          expect(%w[Sharon Leo Leila Brian Arun].my_none?(Numeric)).to be(true)
+        end
       end
     end
   end
@@ -180,17 +202,33 @@ describe Enumerable do
   end
 
   describe '#my_inject' do
-    context 'if block given' do
-      it 'returns items that passes our filter' do
-        num = []
-        num_array.my_inject([]) { |_result, element| num << element.to_s if element > 9 }
-        expect(num).to eq(%w[10 20 30])
+    context 'if block given and arg given' do
+      context 'for a number array with arg' do
+        it 'returns numbers those passes our filter' do
+          num = []
+          num_array.my_inject([]) { |_result, element| num << element.to_s if element > 9 }
+          expect(num).to eq(%w[10 20 30])
+        end
+      end
+      context 'for a array of strings without arg' do
+        it 'returns items those passes our filter' do
+          longest = array.my_inject { |memo,word| memo.size > word.size ? memo : word }
+          expect(longest).to eq("Sharon")
+        end
       end
     end
     context 'if block not given, but argument given' do
-      it 'returns sum of items' do
-        num = num_array.my_inject(:+)
-        expect(num).to eq(84)
+      context 'plus symbol given' do
+        it 'returns sum of items' do
+          num = num_array.my_inject(:+)
+          expect(num).to eq(84)
+        end
+      end
+      context 'multiplication symbol given' do
+        it 'returns multiplication of items' do
+          num = num_array.my_inject(:*)
+          expect(num).to eq(5670000)
+        end
       end
     end
   end
